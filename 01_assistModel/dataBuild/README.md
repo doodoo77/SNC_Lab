@@ -1,6 +1,6 @@
 ## Pipeline
 
-![진단 대상 화면 선정 파이프라인](./assets/diag_scope_pipeline.png)
+![진단 대상 화면 선정 파이프라인](./assets/diagScope.png)
 
 # PPTX Accessibility Dataset Extractor
 

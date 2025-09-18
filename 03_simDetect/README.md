@@ -1,5 +1,7 @@
 # 🔎 Multimodal RAG for Similar Page Retrieval
 
+![멀티모달 RAG 예시](./assets/multimodal_RAG.png)
+
 이 프로젝트는 **웹 접근성 진단 자동화**를 위한 보조 도구로,  
 현재 진단하고자 하는 페이지와 **유사한 구조/내용을 가진 다른 페이지를 검색**하는 파이프라인을 구현한 Jupyter Notebook입니다.  
 
@@ -55,6 +57,7 @@ jupyter notebook multimodal_RAG.ipynb
 ---
 
 ## 📊 예시 시나리오
+
 - 사용자가 특정 진단 대상 페이지(URL/스크린샷)를 입력  
 - RAG 파이프라인이 유사한 레이아웃과 UI 패턴을 가진 페이지들을 찾아 반환  
 - 예:  
