@@ -1,0 +1,22 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 초, 중등 영어 콘텐츠 공통
+003: -
+004: -
+005: -
+006: 동일 유형 페이지
+007: 영어_초56 > 롤플레이 > 3단원 > type 1-1
+008: 스크린 리더 사용성 문제
+009: 영어 문장과 한국어 해석이 구분 없이 연속적으로 제공되어 이해가 어려우므로 스크린 리더 사용자의 사용성을 위해 해석 문구에 부가적인 설명을 제공하는 것이 좋음
+010: 또한 요소 탐색에 각 문장을 <p>로 제공하는 것이 더 효과적임
+011: 개선 방안
+012: <div class="bubble_wrap">
+013: <div class="bubble">
+014: <img src="../../img/roleplay/bubble_tail_pink.png" alt="" width="28px" class="tail">
+015: <p class="description notranslate">Good afternoon. What would you like?</p>
+016: </div>
+017: <div class="btn_wrap">...</div>
+018: </div>
+019: <p class="translation on" style="width: 1046.61px;">
+020: <span class="sr-only">해설: </span> 좋은 오후예요. 무엇으로 하시겠어요?</p>
+021: </div>

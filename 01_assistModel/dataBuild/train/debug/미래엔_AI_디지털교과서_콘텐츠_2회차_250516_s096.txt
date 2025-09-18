@@ -1,0 +1,14 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_중2 > 드릴 > WA07
+003: https://edudata.selvasai.com:58667/mirae-n/m_2/html/drill.html?school=mid&grade=2&lesson=01&chapter=ls&type=wa02
+004: 11. (초점 이동과 표시) 키보드에 의한 초점은 논리적으로 이동해야 하며, 시각적으로 구별할 수 있어야 한다.
+005: 텍스트 등 운용할 수 없는 요소에 초점이 되는 경우
+006: 표시된 spelling 버튼은 사용자가 선택한 알파벳을 확인하고, 정정할 수 있는 용도임
+007: 선택된 알파벳이 없으면 spelling 버튼은 disabled 처리되어 초점이 진입하지 않도록 하여 사용자의 혼란을 제거해야 하지만, character 버튼을 통해 알파벳을 제거하면 알파벳만 제거되고 disabled 속성이 적용되지 않아 특별한 기능이 없는 spelling 버튼으로 초점이 진입하게 됨
+008: 현재 로직: character 버튼에 pressed 클래스가 존재하면, 해당 버튼 스펠링과 매치되는 spelling 버튼의 알파벳과 done 속성을 제거하고 disabled 속성 false로 설정
+009: 개선 로직: character 버튼에 pressed 클래스가 존재하면, 해당 버튼 스펠링과 매치되는 spelling 버튼의 알파벳과 done 속성을 제거하고 disabled 속성 true로 설정
+010: 문제점
+011: item.removeClass("done").prop("disabled", false);
+012: 개선 방안
+013: item.removeClass("done").prop("disabled", true);

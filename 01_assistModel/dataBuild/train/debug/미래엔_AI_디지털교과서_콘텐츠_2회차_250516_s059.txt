@@ -1,0 +1,22 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_초56 > 드릴 > WA03
+003: https://edudata.selvasai.com:58667/mirae-n/el56/html/drill.html?school=el&grade=6&lesson=04&chapter=06&type=wa03
+004: 26. (사용자 요구에 따른 실행) 사용자가 의도하지 않은 기능(새 창, 초점에 의한 맥락 변화 등)은 실행되지 않아야 한다.
+005: 입력 서식의 값을 변경하는 것만으로 다른 페이지로 이동하거나 현재 페이지의 의미가 완전히 바뀌는 경우
+006: 동일 유형 페이지
+007: 영어_초56 > 드릴 > WA07
+008: 영어_초56 > 드릴 > WS04
+009: 사용자가 기능 실행의 결과를 예측할 수 있도록 동작에 대한 설명을 제공해야 함
+010: aria-live="polite" 속성과 aria-atomic="true"속성을 이용하여 스크린 리더 사용자가 선택한 단어 조합을 실시간으로 파악할 수 있도록 변경해야 함
+011: 개선 방안
+012: <div class="spelling-area" aria-live="polite" aria-atomic="true">
+013: <button class="spelling notranslate done" lang="en">r</button>
+014: <button class="spelling notranslate done" lang="en">b</button>
+015: <button class="spelling notranslate done" lang="en">a</button>
+016: <button class="spelling notranslate done" lang="en">e</button>
+017: <button class="spelling notranslate done" lang="en">y</button>
+018: <button class="spelling notranslate" lang="en" disabled=""></button>
+019: <button class="spelling notranslate" lang="en" disabled=""></button>
+020: <button class="spelling notranslate" lang="en" disabled=""></button>
+021: </div>

@@ -1,0 +1,19 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 초, 중등 영어 콘텐츠 공통
+003: -
+004: -
+005: -
+006: 동일 유형 페이지
+007: 영어_초56 > 플래시카드 > 5단원 > 1차시
+008: 영어_초56 > 롤플레이 > 3단원 > type 1-1
+009: 영어_초56 > 커스텀 > 9단원 > 3차시
+010: 영어_초56 > 커스텀 > 12단원 > 3차시-2
+011: 원어민 발음 재생 버튼의 재생 전, 재생 중 상태를 구분하지 않아 스크린 리더에서 확인할 수 없음
+012: aria-label 속성에 버튼의 적절한 이름을 제공하고, 상태 정보를 동적으로 변경하여 제공해야 함
+013: 또한 스크린 리더 사용자의 혼선을 방지하기 위해 가능하면 재생 중인 상태의 버튼에는 disabled를 선언할 것을 권장함
+014: 개선 방안
+015: <!-- 재생 전 -->
+016: <button type="button" class="audio-btn word-audio" style="visibility: visible;" aria-label="발음 듣기">...</button>
+017: <!-- 재생 중 -->
+018: <button type="button" class="audio-btn word-audio" style="visibility: visible;" aria-label="발음 듣기, 재생 중" disabled>...</button>

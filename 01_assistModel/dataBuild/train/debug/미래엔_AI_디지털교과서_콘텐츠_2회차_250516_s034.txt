@@ -1,0 +1,13 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_초56 > 롤플레이 > 3단원 > type 1-1
+003: https://edudata.selvasai.com:58667/mirae-n/el56/html/roleplay/type1-1.html?school=el&grade=5&lesson=05&chapter=02
+004: 4. (콘텐츠의 선형구조) 콘텐츠는 논리적인 순서로 제공해야 한다.
+005: 콘텐츠의 구조를 논리적으로 제공하지 않아 주종 관계를 이해할 수 없는 경우
+006: 계층 구조가 존재하는 콘텐츠에 계층 구조를 표현할 수 있는 마크업을 사용하지 않음
+007: 계층 구조를 표현할 수 있는 마크업(ul>li)으로 수정해야 함
+008: 개선 방안
+009: <ul role="list" class="dialogue_container" style="overflow-anchor: auto">
+010: <li role="listitem" class="dialogue left" style="">...</li>
+011: <li role="listitem" class="dialogue right" style="opacity: 1">...</li>
+012: </ul>

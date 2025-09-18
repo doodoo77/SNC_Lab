@@ -1,0 +1,18 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 수학_중2 > Ⅶ. 도형의 닮음과 피타고라스 정리 > 대단원 마무리, 피타고라스 정리의 증명 탐구하기 (1)
+003: https://mizushiro.github.io/middle-math/src/M2-700-01-01-01/
+004: 4. (콘텐츠의 선형구조) 콘텐츠는 논리적인 순서로 제공해야 한다.
+005: 콘텐츠의 구조를 논리적으로 제공하지 않아 주종 관계를 이해할 수 없는 경우
+006: 동일 유형 페이지
+007: 수학_중2 > Ⅶ. 도형의 닮음과 피타고라스 정리 > 대단원 마무리, 피타고라스 정리의 증명 탐구하기 (2)
+008: 문제에 대한 맥락 이해를 위해 배경이 되는 이미지에 대하여 설명을 상위에 제공한 후 각각 '색이 있는 조각, 버튼'에 초점이 진입해야 함
+009: 개선 방안
+010: <img src="./images/bg.svg" alt="각 B의 크기가 90도인 직각삼각형 ABC에서 세 변 AB, BC, CA를 각각 한 변으로 하는 세 개의 정사각형이 있습니다. 이때 변 BC를 한 변으로 하는 정사각형의 대각선의 교점 O를 지나면서 변 AC에 평행한 선분과 그 선분에 수직인 선분이 있습니다." class="bg">
+011: ...
+012: <div data-drag-group="object">
+013: <div data-drag-item="object" data-value="1" data-base="1">
+014: <button type="button" data-drag-object="1" data-drag-copy="false" aria-label="변 BC를 한 변으로 하는 정사각형을 점 O를 지나고 변 AC에 평행한 선분과 그 선분에 수직인 선분으로 자른 노란색 사각형입니다." data-rotate="0">...</button>
+015: </div>
+016: <div data-drag-item="object" data-value="2" data-base="2">...</div>
+017: </div>

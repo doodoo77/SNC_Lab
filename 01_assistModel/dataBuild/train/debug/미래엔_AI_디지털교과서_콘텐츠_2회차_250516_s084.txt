@@ -1,0 +1,12 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_중2 > 롤플레이 > 2단원 > type 1-1
+003: https://edudata.selvasai.com:58667/mirae-n/m_2/html/roleplay/type1-1.html?school=mid&grade=2&lesson=02&chapter=01
+004: 1. (적절한 대체 텍스트 제공) 텍스트 아닌 콘텐츠는 그 의미나 용도를 인식할 수 있도록 대체 텍스트를 제공해야 한다.
+005: 불릿이나 배경이미지 등 의미 없는 이미지에 alt 속성을 제공하지 않거나 공백이 아닌 불필요한 대체 텍스트를 제공한 경우
+006: 동일 유형 페이지
+007: 롤플레이 > 4단원 > type 2-2
+008: 롤플레이 > 7단원 > type 2-3
+009: 장식 등 심미적 효과를 위한 이미지에는 대체 텍스트를 생략하고 공백 문자를 제공해야 함
+010: 개선 방안
+011: <img class="complete_char_m2" src="../../img/roleplay/complete_char_m2.png" alt="">

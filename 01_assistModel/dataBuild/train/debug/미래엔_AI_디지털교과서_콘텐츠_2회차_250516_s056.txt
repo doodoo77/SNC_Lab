@@ -1,0 +1,16 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_초56 > 드릴 > WA03
+003: https://edudata.selvasai.com:58667/mirae-n/el56/html/drill.html?school=el&grade=6&lesson=04&chapter=06&type=wa03
+004: -
+005: -
+006: 동일 유형 페이지
+007: 영어_초56 > 드릴 > WA07
+008: 영어_초56 > 드릴 > WS04
+009: 영어_중2 > 드릴 > WA02
+010: 영어_중2 > 드릴 > WA07
+011: 메시지가 생성되어 있는 상태에서 '채점하기, 버튼'이 실행되면 메시지의 '닫기, 버튼'이 비활성화 되어 사용자는 해당 메시지를 닫을 수 없음
+012: 개선 방안
+013: <button class="close" disabled="">
+014: <img src="../img/drill/ico_close_black.png" alt="닫기">
+015: </button>

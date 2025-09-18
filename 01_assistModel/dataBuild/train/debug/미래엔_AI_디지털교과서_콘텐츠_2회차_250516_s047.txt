@@ -1,0 +1,20 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_초56 > 롤플레이 > 6단원 > type 1-2
+003: https://edudata.selvasai.com:58667/mirae-n/el56/html/roleplay/type1-2.html?school=el&grade=5&lesson=06&chapter=02
+004: 1. (적절한 대체 텍스트 제공) 텍스트 아닌 콘텐츠는 그 의미나 용도를 인식할 수 있도록 대체 텍스트를 제공해야 한다.
+005: <img>,<input type="image"> 등 이미지 요소에 대해 alt 속성을 제공하지 않거나 alt속성은 선언되었으나 그 내용이 img의 내용을 대체할 수 없는 경우 그리고 오타로 표기되어 의미가 변경된 경우
+006: 동일 유형 페이지
+007: 영어_초56 > 롤플레이 > 3단원 > type 1-1
+008: 영어_중2 > 롤플레이 > 2단원 > type 1-1
+009: 스크린 리더 사용자가 튜토리얼 절차를 청각적으로 파악할 수 있도록, 대체 텍스트를 통해 해당 절차를 동일하게 설명해야 함
+010: 개선 방안
+011: <img class="tutorial_text1" src="../../img/roleplay/tutorial_2-1.png" alt="step 1. 그림을 선택해요!" style="display: none;">
+012: …
+013: <img class="tutorial_text2" src="../../img/roleplay/tutorial_2-2.png" alt="step 2. 듣기 버튼을 눌러 올바른 발음을 들어 보아요!" style="display: none;">
+014: …
+015: <img class="tutorial_text3" src="../../img/roleplay/tutorial_2-3.png" alt="step 3.말하기 버튼을 눌러 말해 보아요!" style="display: none;">
+016: ...
+017: <img class="tutorial_text4" src="../../img/roleplay/tutorial_2-4.png" alt="step 4. 말하기를 완료하면, 결과 화면이 나와요!" style="display: none;">
+018: …
+019: <img class="tutorial_text5 on" src="../../img/roleplay/tutorial_2-5.png" alt="step 5. 문장을 모두 따라 말한 뒤  완료하기를 눌러 활동을 마무리하세요.">

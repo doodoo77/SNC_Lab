@@ -1,0 +1,30 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_중2 > 드릴 > WA07
+003: https://edudata.selvasai.com:58667/mirae-n/m_2/html/drill.html?school=mid&grade=2&lesson=01&chapter=ls&type=wa07
+004: 11. (초점 이동과 표시) 키보드에 의한 초점은 논리적으로 이동해야 하며, 시각적으로 구별할 수 있어야 한다.
+005: 초점 또는 키보드의 위치를 나타내는 요소가 시각적으로 표시되지 않은 경우
+006: 링크를 담고 있는 영역에 선언된 overflow:hidden 및 border 영역과의 중첩으로 인해 초점을 시각적으로 명확하게 변별할 수 없음
+007: 링크의 outline-offset 스타일을 8px(border 5px + 3px) 수준으로 조정하여 키보드 초점이 시각적으로 명확하게 변별될 수 있도록 해야 함
+008: 개선 방안
+009: .character-area button {
+010: width: 120px;
+011: min-width: 120px;
+012: min-height: 120px;
+013: max-height: 120px;
+014: line-height: 120px;
+015: display: flex;
+016: align-items: center;
+017: justify-content: center;
+018: font-size: 50px;
+019: font-weight: 700;
+020: color: #000000;
+021: border-radius: 30px;
+022: border: 5px solid #000;
+023: background: #f7f4e9;
+024: box-shadow: 0px 4px 0px 0px #6d6d6d;
+025: transition: all 0.1s ease-in;
+026: outline-offset: 8px;
+027: }
+028: 개선 전
+029: 개선 후

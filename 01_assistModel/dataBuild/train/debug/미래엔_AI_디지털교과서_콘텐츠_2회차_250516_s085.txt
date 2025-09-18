@@ -1,0 +1,16 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 롤플레이 > 4단원 > type 2-2
+003: https://edudata.selvasai.com:58667/mirae-n/m_2/html/roleplay/type2-2.html?school=mid&grade=2&lesson=04&chapter=01
+004: 1. (적절한 대체 텍스트 제공) 텍스트 아닌 콘텐츠는 그 의미나 용도를 인식할 수 있도록 대체 텍스트를 제공해야 한다.
+005: <img>,<input type="image"> 등 이미지 요소에 대해 alt 속성을 제공하지 않거나 alt속성은 선언되었으나 그 내용이 img의 내용을 대체할 수 없는 경우 그리고 오타로 표기되어 의미가 변경된 경우
+006: 동일 유형 페이지
+007: 롤플레이 > 7단원 > type 2-3
+008: 노란색 네모가 의미하는 빈칸이라는 내용을 스크린 리더 사용자는 인지하지 못함
+009: 스크린 리더 사용자도 span.blank_field가 빈칸임을 인지할 수 있도록 숨김 텍스트로 빈칸의 정보를  숨김텍스트로 전달하고 span.blank-fild의 텍스트인 "?"가 읽히지 않도록 aria-hidden 속성을 추가해야 함
+010: 개선 방안
+011: <span class="description notranslate">
+012: <span class="blank_field“ aria-hidden=“true">?</span>
+013: <span class="a11y-hidden">빈 칸</span>
+014: ?
+015: </span>

@@ -1,0 +1,19 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_중2 > 플래시카드 > 5단원 > Before You Read차시
+003: https://edudata.selvasai.com:58667/mirae-n/m_2/html/flashcard.html?school=mid&grade=2&lesson=05&chapter=Before%20You%20Read
+004: -
+005: -
+006: 두 카드의 짝이 맞지 않을 경우 카드가 회색으로 색상변화와 함께 흔들리지만 음성안내는 없어 스크린 리더 사용자는 오답여부를 알 수 없음
+007: 카드가 오답인 경우 해당 내용을 안내할 수 있도록 별도의 메시지 div를 구성하여 정보를 제공해야 함
+008: 개선 방안
+009: <li class="image-card flipped incorrect" translate="no" role="listitem">
+010: <div class="card-front" aria-hidden="false">
+011: <span class="sr-only"><span>카드 13</span></span>
+012: <div class="front-text">soldier</div>
+013: </div>
+014: <button class="card-back" style="display: inline-block" disabled="">
+015: <span class="sr-only"><span>카드 13</span><span>내용: <span lang="en">soldier</span></span></span>
+016: </button>
+017: <span class="sr-only" aria-live="polite">오답</span>
+018: </li>

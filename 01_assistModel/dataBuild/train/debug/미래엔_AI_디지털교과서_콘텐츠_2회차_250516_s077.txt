@@ -1,0 +1,16 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 영어_중2 > 플래시카드 > 5단원 > Before You Read차시
+003: https://edudata.selvasai.com:58667/mirae-n/m_2/html/flashcard.html?school=mid&grade=2&lesson=05&chapter=Before%20You%20Read
+004: -
+005: -
+006: 스크린 리더 사용자가 시간이 다 되었음을 인지할 수 있도록 5초가 남은 순간부터 aria-live="polite"가 선언되어야 함(초기 상태가 아니라 5초가 남았을 때 속성이 선언되어야 함에 유의)
+007: 개선 방안
+008: <div class="timer-container" aria-live="polite" style="">
+009: <div class="watch-container">
+010: <img class="watch shake" src="../img/flashcard/clock-stopwatch.png" alt="남은 시간" />
+011: </div>
+012: <div class="timer">
+013: <span class="progress" style="width: 90%">5초</span>
+014: </div>
+015: </div>

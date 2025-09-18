@@ -1,0 +1,14 @@
+[RAW TEXT CHUNKS]
+001: 진단 결과 및 개선 방안
+002: 수학_중2 > Ⅱ. 식의 계산 > 4. 다항식의 덧셈과 뺄셈 대수 타일을 이용한 다항식의 덧셈 (2)
+003: https://mizushiro.github.io/middle-math/src/M2-204-01-02-01/
+004: 19. (적절한 링크 텍스트) 링크 텍스트는 용도나 목적을 이해할 수 있도록 제공해야 한다.
+005: 목적이나 용도를 알기 어려운 링크 텍스트를 제공한 경우
+006: 선택된 대수 타일 버튼 요소에 텍스트 레이블 또는 접근 가능한 이름을 제공하여 보조 기술 사용자도 동등한 정보를 전달받을 수 있도록 해야 함
+007: 현재 선택된 대수 타일 버튼을 클릭 시 , 선택이 취소되는 기능이 있는데 이러한 기능을 aria-label로 명시해주어야 함
+008: 개선 방안
+009: <div class="quiz-52--step1-area">
+010: <button type="button" class="quiz-52--step1-btn clone" data-answer2="" data-value="+a" aria-label="+a 선택 취소">+<i translate="no">a</i></button>
+011: <button type="button" class="quiz-52--step1-btn clone" data-answer2="" data-value="+b" aria-label="+b 선택 취소">+<i translate="no">b</i></button>
+012: <button type="button" class="quiz-52--step1-btn clone"
+013: </div>
