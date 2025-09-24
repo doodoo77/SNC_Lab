@@ -12,11 +12,9 @@
 ---
 
 ## 📌 전체 구조
-```mermaid
-flowchart LR
-    A[추론 데이터 생성] --> B[SFT 학습]
-    B --> C[모델 추론]
-```
+
+<img src="./assets/assisModel.png" alt="Pipeline Diagram" width="800"/>
+
 
 ---
 
