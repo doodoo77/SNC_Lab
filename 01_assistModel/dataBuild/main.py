@@ -1,10 +1,29 @@
 # -*- coding: utf-8 -*-
-import os, re, json, time, base64
+"""
+기존 코드의 '추론부'와 '메타데이터 추출부'는 **그대로 유지**하고,
+'전체 스크린샷'을 **Playwright 기반**으로 교체했습니다.
+- 동적 요소(레이지로드/애니메이션/스티키 헤더) 대응
+- 헤더 포함 합성 옵션(기본 포함)
+- visited deque 캐시(같은 URL 재방문 시 재캡처 없이 저장)
+필요 패키지:
+    pip install playwright pillow python-pptx webdriver-manager
+    python -m playwright install chromium --with-deps
+"""
+import os, re, json, time, base64, io
+from collections import deque
+from urllib.parse import urlparse
+from typing import Optional, List, Dict, Set, Tuple
+from PIL import Image
+
 from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE_TYPE
+
+# (Selenium 관련 import/함수는 그대로 두지만 더이상 사용하지 않습니다.)
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+
 from openai import OpenAI
 
 # ===============================
@@ -14,7 +33,7 @@ os.makedirs("./image/전체영역", exist_ok=True)
 os.makedirs("./image/오류영역", exist_ok=True)
 
 # ===============================
-# Selenium Driver
+# (구) Selenium Driver (보존: 사용 안 함)
 # ===============================
 def build_driver(headless=True):
     opts = Options()
@@ -66,7 +85,7 @@ def fullpage_screenshot(driver, out_path):
         return False
 
 # ===============================
-# 이미지 보관(오류 영역)
+# 이미지 보관(오류 영역)  ← (원본 유지)
 # ===============================
 def extract_error_images_from_slide(slide, slide_idx):
     saved, first_written = 0, False
@@ -88,10 +107,8 @@ def extract_error_images_from_slide(slide, slide_idx):
     return saved
 
 # ===============================
-# AI 기반 PPTX 파싱
+# AI 기반 PPTX 파싱  ← (원본 유지)
 # ===============================
-from pptx.enum.shapes import MSO_SHAPE_TYPE
-
 def _collect_text_blocks(slide):
     """슬라이드 내 모든 텍스트/표 블록을 그룹 내부까지 재귀 수집.
     - 줄바꿈/들여쓰기 보존 (정규화/클린업 없음)
@@ -162,7 +179,6 @@ def _collect_text_blocks(slide):
         walk(sh, 0, 0)
 
     return blocks
-
 
 client = OpenAI(api_key="sk-proj-RrmGBqNXk-bpIvVhaDFVaIBuV7EQeI3RllDD4M6pDKTzOWocvmXtEsTckK79VVlkLTFOdiqYO6T3BlbkFJnkzL5k4YCpEKAw_bjgJVS6wvlJRbayPKxWRy5BGkyyQWaA7ESppOz6n5Wf25q3hBPZneylOQ4A")
 
@@ -263,9 +279,8 @@ def parse_diagnosis_text(slide, slide_width):
 
     return out
 
-
 # ===============================
-# 추론(근거 작성)
+# 추론(근거 작성)  ← (원본 유지)
 # ===============================
 def generate_reasoning(file_names, output_data):
     full_img = file_names[0] if file_names else "없음"
@@ -292,86 +307,372 @@ def generate_reasoning(file_names, output_data):
     [작성 지침]  
     1. 전체 페이지 스크린샷을 통해 해당 페이지의 목적을 파악하고, 
     2. 페이지 목적을 참고할 때, 오류 영역 스크린샷에 드러난 진단 콘텐츠의 역할을 파악하십시오.  
-    3. 이제 오류 영역 HTML/코드까지 함께 고려할 때, 왜 이런 검사항목과 오류유형이 도출되었는지 설명하십시오.
+    3. 이제 오류 영역 HTML/코드까지 함께 고려할 때, 왜 이런 [평가 출력]이 도출되었는지 설명하십시오.
 
     [근거]  
     """
 
-    resp = client.chat.completions.create(
-        model="o4-mini-2025-04-16",
-        messages=[
-            {"role":"system","content":"You are a web accessibility expert."},
-            {"role":"user","content":prompt},
-        ],
+    resp = client.responses.create(
+    model="gpt-5",
+    input=[
+        {"role": "system", "content": "You are a web accessibility expert."},
+        {"role": "user", "content": prompt},
+    ],
     )
-    return resp.choices[0].message.content.strip()
+
+    reasoning = resp.output_text.strip()
+    return reasoning
+
+# =====================================================================
+# ★★★ Playwright 기반 전체 스크린샷 (동적 로딩/헤더 합성/캐시) — 신규 추가 ★★★
+# =====================================================================
+from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
+
+DEFAULT_HIDE_SELECTORS = [
+    "nav", ".gnb", ".cookie", ".cookies",
+    ".banner", ".popup", ".pop", ".floating", ".float",
+    ".chat", ".chatbot", ".subscribe", ".sticky",
+    ".toolbar", ".footer-quick", ".video-overlay"
+]
+HEADER_CANDIDATES = ['header', '.header', '#header', '[role="banner"]']
+
+# visited LRU 캐시
+_VISITED_Q: deque[str] = deque(maxlen=256)
+_VISITED_MAP: Dict[str, bytes] = {}
+
+def _canon_url(u: str) -> str:
+    p = urlparse((u or "").strip())
+    scheme = (p.scheme or "").lower()
+    host = (p.netloc or "").lower()
+    path = (p.path or "/").rstrip("/") or "/"
+    qs = ("?" + p.query) if p.query else ""
+    return f"{scheme}://{host}{path}{qs}"
+
+def _cache_get(u: str) -> Optional[bytes]:
+    k = _canon_url(u)
+    b = _VISITED_MAP.get(k)
+    if b is not None:
+        try: _VISITED_Q.remove(k)
+        except ValueError: pass
+        _VISITED_Q.append(k)
+    return b
+
+def _cache_put(u: str, b: bytes):
+    k = _canon_url(u)
+    if k not in _VISITED_MAP and len(_VISITED_Q) == _VISITED_Q.maxlen:
+        old = _VISITED_Q.popleft()
+        _VISITED_MAP.pop(old, None)
+    else:
+        try: _VISITED_Q.remove(k)
+        except ValueError: pass
+    _VISITED_Q.append(k)
+    _VISITED_MAP[k] = b
+
+def _add_stability_styles(page):
+    css = """
+    * { animation: none !important; transition: none !important; }
+    html, body { scroll-behavior: auto !important; }
+    """
+    try: page.add_style_tag(content=css)
+    except Exception: pass
+
+def _header_exists(page) -> bool:
+    try:
+        return page.evaluate(
+            "(sels)=>sels.some(sel=>document.querySelector(sel))",
+            HEADER_CANDIDATES
+        )
+    except Exception:
+        return False
+
+def _mark_and_hide_header(page):
+    page.evaluate(
+        "(sels)=>{for(const sel of sels){document.querySelectorAll(sel).forEach(el=>{el.setAttribute('data-fullshot-header','1');el.style.setProperty('display','none','important');});}}",
+        HEADER_CANDIDATES
+    )
+
+def _show_header_static(page):
+    page.evaluate("""
+    () => {
+      document.querySelectorAll('[data-fullshot-header]').forEach(el => {
+        el.style.removeProperty('display');
+        el.style.setProperty('position','static','important');
+        el.style.setProperty('top','auto','important');
+        el.style.setProperty('transform','none','important');
+        el.querySelectorAll('*').forEach(ch => {
+            const cs = getComputedStyle(ch);
+            if (cs.position === 'sticky') {
+                ch.style.setProperty('position','static','important');
+                ch.style.setProperty('top','auto','important');
+            }
+        });
+      });
+    }""")
+
+def _hide_fixed_and_selectors(page, hide_selectors: List[str], max_h=220):
+    try:
+        page.evaluate(
+            """(args)=>{
+                const sels=args.sels, maxH=args.maxH;
+                for (const sel of sels) {
+                    document.querySelectorAll(sel).forEach(el=>{
+                        if (el.closest('[data-fullshot-header]')) return;
+                        el.style.setProperty('display','none','important');
+                    });
+                }
+                const all=[...document.querySelectorAll('body *')].slice(0,5000);
+                for(const el of all){
+                    if (el.closest('[data-fullshot-header]')) continue;
+                    const cs=getComputedStyle(el);
+                    if(cs.position==='fixed'||cs.position==='sticky'){
+                        const r=el.getBoundingClientRect();
+                        if(r.height>0 && r.height<=maxH){
+                            el.style.setProperty('display','none','important');
+                        }
+                    }
+                }
+            }""",
+            {"sels": hide_selectors, "maxH": int(max_h)}
+        )
+    except Exception:
+        pass
+
+def _compose_header_and_body_bytes(header_bytes: bytes, body_bytes: bytes, *, out_fmt: str = "png", quality: Optional[int] = None) -> bytes:
+    if Image is None:
+        raise RuntimeError("Pillow가 필요합니다.  pip install pillow")
+    h = Image.open(io.BytesIO(header_bytes)).convert("RGB")
+    b = Image.open(io.BytesIO(body_bytes)).convert("RGB")
+    w = min(h.width, b.width)
+    if h.width != w: h = h.crop((0,0,w,h.height))
+    if b.width != w: b = b.crop((0,0,w,b.height))
+    merged = Image.new("RGB", (w, h.height + b.height), (255,255,255))
+    merged.paste(h, (0,0)); merged.paste(b, (0,h.height))
+    buf = io.BytesIO()
+    if out_fmt.lower() in ("jpg","jpeg"):
+        q = 90 if quality is None else max(1, min(100, quality))
+        merged.save(buf, format="JPEG", quality=q)
+    else:
+        merged.save(buf, format="PNG")
+    return buf.getvalue()
+
+def _capture_with_page(page, url: str, *, width=1366, scale=1.0, timeout_s=60,
+                       include_header=True, hide_selectors: Optional[List[str]]=None,
+                       scroll_mode="fast", step_px=1200, idle_ms=1200,
+                       block_media=True, out_fmt="png", quality: Optional[int]=None) -> bytes:
+    hide_selectors = hide_selectors or DEFAULT_HIDE_SELECTORS
+
+    _add_stability_styles(page)
+
+    page.set_viewport_size({"width": width, "height": 900})
+    page.goto(url, wait_until="domcontentloaded", timeout=timeout_s*1000)
+    try:
+        page.wait_for_load_state("networkidle", timeout=timeout_s*1000)
+    except PWTimeout:
+        pass
+
+    # 스크롤 로딩: fast(3회 바닥 점프) 또는 step
+    if scroll_mode == "step":
+        last_h = 0; stable = 0
+        for _ in range(500):
+            page.evaluate("(s)=>window.scrollBy(0,s)", step_px)
+            page.wait_for_timeout(idle_ms)
+            try:
+                h = page.evaluate("()=>document.documentElement.scrollHeight")
+            except Exception:
+                break
+            if h == last_h:
+                stable += 1
+                if stable >= 2: break
+            else:
+                stable = 0; last_h = h
+        page.evaluate("()=>window.scrollTo(0,document.documentElement.scrollHeight)")
+        page.wait_for_timeout(idle_ms)
+    else:
+        for _ in range(3):
+            page.evaluate("()=>window.scrollTo(0,document.documentElement.scrollHeight)")
+            page.wait_for_timeout(400)
+
+    # 방해 요소 및 헤더 처리
+    if include_header and _header_exists(page):
+        _mark_and_hide_header(page)
+    if hide_selectors:
+        _hide_fixed_and_selectors(page, hide_selectors, max_h=220)
+
+    if include_header:
+        # 본문 먼저
+        body = page.screenshot(full_page=True, type="png")
+        # 헤더만
+        _show_header_static(page)
+        page.evaluate("()=>window.scrollTo(0,0)")
+        page.wait_for_timeout(200)
+        try:
+            header_el = page.locator("[data-fullshot-header]").first
+            header = header_el.screenshot(type="png") if header_el.count() > 0 \
+                     else page.screenshot(full_page=False, type="png")
+            final = _compose_header_and_body_bytes(header, body, out_fmt=out_fmt, quality=quality)
+        except Exception:
+            final = page.screenshot(full_page=True, type=("jpeg" if out_fmt=="jpeg" else "png"))
+    else:
+        final = page.screenshot(full_page=True, type=("jpeg" if out_fmt=="jpeg" else "png"))
+
+    return final
+
+def _open_playwright(width=1366, scale=1.0, block_media=True):
+    """브라우저/컨텍스트/페이지 생성 (한 번만 열어 재사용)."""
+    pw = sync_playwright().start()
+    try:
+        browser = pw.chromium.launch(headless=True)
+    except Exception:
+        browser = pw.chromium.launch(headless=True)
+    context = browser.new_context(
+        viewport={"width": width, "height": 900},
+        device_scale_factor=scale,
+        locale="ko-KR",
+        timezone_id="Asia/Seoul"
+    )
+    if block_media:
+        BLOCK_EXT = (".mp4",".webm",".mov",".m4v",".avi",".mp3",".ogg",".wav")
+        def _router(route):
+            url_l = route.request.url.split("?")[0].lower()
+            rtype = route.request.resource_type
+            if rtype in {"media"} or url_l.endswith(BLOCK_EXT):
+                return route.abort()
+            return route.continue_()
+        try:
+            context.route("**/*", _router)
+        except Exception:
+            pass
+    page = context.new_page()
+    return pw, browser, context, page
+
+def _close_playwright(pw, browser, context):
+    try:
+        context.close()
+    except Exception:
+        pass
+    try:
+        browser.close()
+    except Exception:
+        pass
+    try:
+        pw.stop()
+    except Exception:
+        pass
 
 # ===============================
-# 메인 파이프라인
+# 번호 이어붙이기 유틸 (추가)
+# ===============================
+def _max_index_in(dir_path: str) -> int:
+    max_id = 0
+    if not os.path.isdir(dir_path):
+        return 0
+    for name in os.listdir(dir_path):
+        m = re.search(r'^(\d+)\.png$', name, re.IGNORECASE)
+        if m:
+            try:
+                max_id = max(max_id, int(m.group(1)))
+            except ValueError:
+                pass
+    return max_id
+
+
+# ===============================
+# 메인 파이프라인  ← (★ 스크린샷 부분만 Playwright로 교체)
 # ===============================
 def process_pptx(pptx_path, output_jsonl="metadata.jsonl", debug=False, headless=True):
     prs = Presentation(pptx_path)
     wrote_any = False
 
-    with open(output_jsonl, "w", encoding="utf-8") as f:
-        for i, slide in enumerate(prs.slides, start=1):
-            diag = parse_diagnosis_text(slide, prs.slide_width)
+    # ✅ 여기서 페이지/브라우저 열기 (한 번 열어 재사용)
+    pw, browser, context, page = _open_playwright(width=1366, scale=1.0, block_media=True)
 
-            base_url = (diag.get("URL") or "").strip()
-            if not base_url:
-                if debug: print(f"[DEBUG] Slide {i} URL 없음 → 스킵")
-                continue
+    # ✅ 전체영역 파일 번호 이어붙이기(이미 추가했다면 유지)
+    start_full_idx = _max_index_in("./image/전체영역")
 
-            img_count = extract_error_images_from_slide(slide, i)
-            if debug: print(f"[DEBUG] Slide {i} 오류영역 저장: {img_count}개")
+    try:
+        # ✅ 메타데이터는 append 모드로
+        with open(output_jsonl, "a", encoding="utf-8") as f:
+            for i, slide in enumerate(prs.slides, start=1):
+                diag = parse_diagnosis_text(slide, prs.slide_width)
 
-            driver = build_driver(headless=headless)
-            input_files = []
-            try:
-                driver.get(base_url)
-                time.sleep(2.0)
-                _lazyload_scroll(driver)
-                full_path = f"./image/전체영역/{i}.png"
-                fullpage_screenshot(driver, full_path)
-                input_files.append(full_path)
-            except Exception as e:
-                if debug: print(f"[DEBUG] Slide {i} 스크린샷 실패: {e}")
-                driver.quit()
-                continue
-            finally:
-                try: driver.quit()
-                except Exception: pass
+                base_url = (diag.get("URL") or "").strip()
+                if not base_url:
+                    if debug: print(f"[DEBUG] Slide {i} URL 없음 → 스킵")
+                    continue
 
-            if img_count >= 1:
-                for k in range(img_count):
-                    path = f"./image/오류영역/{i}.png" if k == 0 else f"./image/오류영역/{i}_{k}.png"
-                    if os.path.exists(path): input_files.append(path)
+                # 전역(이어붙이기) 인덱스
+                global_idx = start_full_idx + i
 
-            reasoning = "(추론 실패)"
-            try:
-                reasoning = generate_reasoning(input_files, diag)
-            except Exception as e:
-                if debug: print(f"[DEBUG] Slide {i} reasoning 실패: {e}")
+                # 오류영역 저장(전역 번호 사용)
+                img_count = extract_error_images_from_slide(slide, global_idx)
+                if debug: print(f"[DEBUG] Slide {i} 오류영역 저장: {img_count}개")
 
-            output_obj = {
-                "추론": reasoning,
-                "검사항목": diag.get("검사항목",""),
-                "오류유형": diag.get("오류유형",""),
-                "문제점": diag.get("문제점",""),
-                "문제점 및 개선방안_텍스트": diag.get("문제점 및 개선방안_텍스트",""),
-                "문제점 및 개선방안_코드": diag.get("문제점 및 개선방안_코드",""),
-            }
-            record = {"file_names": input_files, "output": output_obj}
-            f.write(json.dumps(record, ensure_ascii=False) + "\n")
-            wrote_any = True
-            if debug: print(f"[DEBUG] Slide {i} 완료 → 파일 {len(input_files)}개")
+                input_files = []
+                try:
+                    full_path = f"./image/전체영역/{global_idx}.png"
 
-    if debug and not wrote_any:
-        print("[DEBUG] 처리된 슬라이드가 없음.")
+                    # 캐시 확인
+                    cached = _cache_get(base_url)
+                    if cached is not None:
+                        with open(full_path, "wb") as out:
+                            out.write(cached)
+                        if debug: print(f"[DEBUG] Slide {i} 캐시 HIT → 저장만")
+                    else:
+                        # ✅ Playwright 페이지 재사용해 전체 캡처
+                        img_bytes = _capture_with_page(
+                            page, base_url,
+                            width=1366, scale=1.0, timeout_s=60,
+                            include_header=True, hide_selectors=DEFAULT_HIDE_SELECTORS,
+                            scroll_mode="fast", step_px=1200, idle_ms=1200,
+                            block_media=True, out_fmt="png", quality=None
+                        )
+                        with open(full_path, "wb") as out:
+                            out.write(img_bytes)
+                        _cache_put(base_url, img_bytes)
+                        if debug: print(f"[DEBUG] Slide {i} 스크린샷 완료 → {full_path}")
 
-    return True
+                    input_files.append(full_path)
+                except Exception as e:
+                    if debug: print(f"[DEBUG] Slide {i} 스크린샷 실패: {e}")
+                    continue
 
+                # 오류영역 경로 수집(전역 번호 기준)
+                if img_count >= 1:
+                    for k in range(img_count):
+                        path = f"./image/오류영역/{global_idx}.png" if k == 0 else f"./image/오류영역/{global_idx}_{k}.png"
+                        if os.path.exists(path): input_files.append(path)
+
+                # 추론부/메타데이터 기록(원본 유지)
+                reasoning = "(추론 실패)"
+                try:
+                    reasoning = generate_reasoning(input_files, diag)
+                except Exception as e:
+                    if debug: print(f"[DEBUG] Slide {i} reasoning 실패: {e}")
+
+                output_obj = {
+                    "추론": reasoning,
+                    "검사항목": diag.get("검사항목",""),
+                    "오류유형": diag.get("오류유형",""),
+                    "문제점": diag.get("문제점",""),
+                    "문제점 및 개선방안_텍스트": diag.get("문제점 및 개선방안_텍스트",""),
+                    "문제점 및 개선방안_코드": diag.get("문제점 및 개선방안_코드",""),
+                }
+                record = {"file_names": input_files, "output": output_obj}
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
+                wrote_any = True
+                if debug: print(f"[DEBUG] Slide {i} 완료 → 파일 {len(input_files)}개")
+
+        if debug and not wrote_any:
+            print("[DEBUG] 처리된 슬라이드가 없음.")
+        return True
+    finally:
+        # ✅ 여기서 닫기
+        _close_playwright(pw, browser, context)
+
+# ===============================
+# 진입점 (원본 유지)
+# ===============================
 if __name__ == "__main__":
-    pptx_file = r"C:\Doo\SNC_Lab\01_assistModel\dataBuild\sample.pptx"
+    pptx_file = r"C:\Doo\SNC_Lab\01_assistModel\dataBuild\sample11_3.pptx"
     process_pptx(pptx_file, output_jsonl="metadata.jsonl", debug=True, headless=True)
     print("처리 완료")

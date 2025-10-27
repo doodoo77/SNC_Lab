@@ -2,7 +2,7 @@ from huggingface_hub import login
 from datasets import load_dataset, Image, Sequence
 
 # 1) 로그인 (토큰 하드코딩 대신 환경변수 HF_TOKEN도 가능)
-login(token="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")
+login(token="your_huggingface_token_here")
 
 # 2) JSONL 로드 (폴더가 아니라 파일을 지정)
 dsd = load_dataset("json", data_files="metadata.jsonl")
