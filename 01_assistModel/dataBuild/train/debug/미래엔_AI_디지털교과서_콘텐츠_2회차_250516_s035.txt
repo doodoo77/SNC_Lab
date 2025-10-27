@@ -1,9 +1,0 @@
-[RAW TEXT CHUNKS]
-001: 진단 결과 및 개선 방안
-002: 영어_초56 > 롤플레이 > 3단원 > type 1-1
-003: https://edudata.selvasai.com:58667/mirae-n/el56/html/roleplay/type1-1.html?school=el&grade=5&lesson=05&chapter=02
-004: 1. (적절한 대체 텍스트 제공) 텍스트 아닌 콘텐츠는 그 의미나 용도를 인식할 수 있도록 대체 텍스트를 제공해야 한다.
-005: 불릿이나 배경이미지 등 의미 없는 이미지에 alt 속성을 제공하지 않거나 공백이 아닌 불필요한 대체 텍스트를 제공한 경우
-006: 장식 등 심미적 효과를 위한 이미지에는 대체 텍스트를 생략하고 공백 문자를 제공해야 함
-007: 개선 방안
-008: <img class="complete_char_56" src="../../img/roleplay/complete_char_56.png" alt="">
