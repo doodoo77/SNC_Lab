@@ -2,8 +2,11 @@
 
 ## Pipeline
 
-![진단 대상 화면 선정 파이프라인](./assets/dataBuild.png)
-![진단 대상 화면 선정 파이프라인](./assets/datapipeline.png)
+### 전체 파이프라인
+![전체 파이프라인](./assets/dataBuild.png)
+
+### 상세 파이프라인
+![상세 파이프라인](./assets/datapipeline.png)
 
 ## 목적
 PPTX 접근성 진단 보고서에서 페이지별 메타데이터를 전사하고, 
