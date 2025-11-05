@@ -180,7 +180,7 @@ def _collect_text_blocks(slide):
 
     return blocks
 
-client = OpenAI(api_key="sk-proj-RrmGBqNXk-bpIvVhaDFVaIBuV7EQeI3RllDD4M6pDKTzOWocvmXtEsTckK79VVlkLTFOdiqYO6T3BlbkFJnkzL5k4YCpEKAw_bjgJVS6wvlJRbayPKxWRy5BGkyyQWaA7ESppOz6n5Wf25q3hBPZneylOQ4A")
+client = OpenAI(api_key="your-api-key-here")
 
 def _ai_map_blocks_to_fields(blocks):
     schema = {
