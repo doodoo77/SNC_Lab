@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-기존 코드의 '추론부'와 '메타데이터 추출부'는 **그대로 유지**하고,
-'전체 스크린샷'을 **Playwright 기반**으로 교체했습니다.
-- 동적 요소(레이지로드/애니메이션/스티키 헤더) 대응
-- 헤더 포함 합성 옵션(기본 포함)
-- visited deque 캐시(같은 URL 재방문 시 재캡처 없이 저장)
 필요 패키지:
     pip install playwright pillow python-pptx webdriver-manager
     python -m playwright install chromium --with-deps
