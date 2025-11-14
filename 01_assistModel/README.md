@@ -13,7 +13,7 @@
 
 ## 📌 전체 구조
 
-<img src="./assets/assisModel.png" alt="Pipeline Diagram" width="800"/>
+<img src="./assests/assisModel.png" alt="Pipeline Diagram" width="800"/>
 
 
 ---
