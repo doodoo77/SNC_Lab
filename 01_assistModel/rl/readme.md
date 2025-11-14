@@ -1,4 +1,6 @@
-# VLM 모델의 접근성·진단 능력 평가 페이지 (Streamlit)
+# VLM 모델의 접근성·진단 능력 평가 페이지 (Streamlit) 
+[평가 페이지 링크](https://snclab-rl.streamlit.app/)
+
 
 **목적**  
 이 앱은 이미지+텍스트 입력을 받아 **외부 LLM/VLM 엔드포인트**(OpenAI-호환, AWS Bedrock, **Vertex AI 튜닝 Gemini 2.5 Pro**)를 호출하고, 전문가의 **검증·편집·피드백**을 수집하여 **JSONL**로 자동 축적합니다. 수집된 데이터는 버튼 한 번으로 **Hugging Face Hub**에 업로드할 수 있습니다.
