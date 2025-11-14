@@ -2,15 +2,18 @@
 
 ## Pipeline
 
-<p align="center">
-  <img src="./assets/dataBuild.png" alt="전체 파이프라인" width="45%" />
-  &nbsp;&nbsp;
-  <img src="./assets/datapipeline.png" alt="상세 파이프라인" width="45%" />
-</p>
-
-<p align="center">
-  <sub><b>그림 1.</b> 전체 파이프라인 &nbsp;&nbsp; <b>그림 2.</b> 상세 파이프라인</sub>
-</p>
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./assets/dataBuild.png" alt="전체 파이프라인" width="95%" /><br/>
+      <sub><b>그림 1.</b> 전체 파이프라인</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="./assets/datapipeline.png" alt="상세 파이프라인" width="95%" /><br/>
+      <sub><b>그림 2.</b> 상세 파이프라인</sub>
+    </td>
+  </tr>
+</table>
 
 
 ## 목적 및 방법
