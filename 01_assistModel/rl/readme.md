@@ -23,13 +23,13 @@
 
 <table>
   <tr>
-    <td align="center" width="50%">
-      <img src="./assets/RL_결과.png" alt="전문가 피드백 입력 화면" width="100%" /><br/>
-      <sub><b>그림 1.</b> AI 출력</sub>
+    <td align="center" style="vertical-align: top;">
+      <img src="./assets/RL_결과.png" alt="AI 출력 화면" height="360" /><br/>
+      <sub><b>그림 1.</b> AI 출력 화면</sub>
     </td>
-    <td align="center" width="50%">
-      <img src="./assets/RL_추론.png" alt="모델 추론 및 진단 결과 화면" width="100%" /><br/>
-      <sub><b>그림 2.</b> 전문가 피드백</sub>
+    <td align="center" style="vertical-align: top;">
+      <img src="./assets/RL_추론.png" alt="전문가 피드백 화면" height="360" /><br/>
+      <sub><b>그림 2.</b> 전문가 피드백 화면</sub>
     </td>
   </tr>
 </table>
