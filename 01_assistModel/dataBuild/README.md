@@ -2,11 +2,16 @@
 
 ## Pipeline
 
-### 전체 파이프라인
-![전체 파이프라인](./assets/dataBuild.png)
+<p align="center">
+  <img src="./assets/dataBuild.png" alt="전체 파이프라인" width="45%" />
+  &nbsp;&nbsp;
+  <img src="./assets/datapipeline.png" alt="상세 파이프라인" width="45%" />
+</p>
 
-### 상세 파이프라인
-![상세 파이프라인](./assets/datapipeline.png)
+<p align="center">
+  <sub><b>그림 1.</b> 전체 파이프라인 &nbsp;&nbsp; <b>그림 2.</b> 상세 파이프라인</sub>
+</p>
+
 
 ## 목적 및 방법
 PPTX 접근성 진단 보고서에서 페이지별 메타데이터를 전사하고, 
