@@ -1,4 +1,5 @@
 # VLM 모델의 접근성·진단 능력 평가 페이지 (Streamlit) 
+
 [평가 페이지 링크](https://snclab-rl.streamlit.app/)
 
 
@@ -17,6 +18,21 @@
 - **HITL 평가**: 응답 편집, 만족도(1–5), 코멘트 입력
 - **데이터 축적**: `hf_export/data.jsonl`로 자동 append, 이미지 파일은 `hf_export/images/`
 - **허깅페이스 업로드**: dataset repo 로 push
+
+## 💻 UI 미리보기
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./assets/RL_추론.png" alt="모델 추론 및 진단 결과 화면" width="100%" /><br/>
+      <sub><b>그림 1.</b> 추론(요약) + 진단 결과 패널</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="./assets/RL_결과.png" alt="전문가 피드백 입력 화면" width="100%" /><br/>
+      <sub><b>그림 2.</b> 전문가 피드백·저장 패널</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
