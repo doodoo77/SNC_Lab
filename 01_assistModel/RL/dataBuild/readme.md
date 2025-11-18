@@ -1,6 +1,6 @@
 # VLM 모델의 접근성·진단 능력 평가 페이지 (Streamlit)
 
-[👉 평가 페이지 바로가기](https://snclab-rl.streamlit.app/)
+[👉 평가 페이지 바로가기](https://snclab-rl-feedback.streamlit.app/)
 
 이 프로젝트는 **지도학습된 AI의 접근성 진단 출력(추론 과정)** 에 대해  
 **인간 전문가가 체계적으로 피드백을 제공**할 수 있도록 만든 Streamlit 기반 평가 페이지입니다.
