@@ -7,7 +7,7 @@ Selenium을 이용해 사이트 전체를 크롤링하고, Vision-LLM(OpenAI GPT
 ---
 
 ## 📌 Pipeline
-![Pipeline](./assets/diagScope.png)
+![Pipeline](.\assets\diagScope.png)
 
 ---
 
