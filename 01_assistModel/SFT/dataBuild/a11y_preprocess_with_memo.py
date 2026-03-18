@@ -272,7 +272,7 @@ class OpenAIVLMBackend:
     """
 
     def __init__(self, model: str = DEFAULT_MODEL, temperature: float = DEFAULT_TEMPERATURE, api_key: Optional[str] = None):
-        api_key = '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'
+        api_key = 'YOUR API KEY'
         if not api_key:
             raise RuntimeError("OPENAI_API_KEY가 설정되어 있어야 합니다. (환경변수로 설정 권장)")
         self.client = OpenAI(api_key=api_key)
